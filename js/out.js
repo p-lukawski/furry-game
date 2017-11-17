@@ -81,12 +81,18 @@ var Coin = function Coin() {
     this.y = Math.floor(Math.random() * 10);
 };
 
+var Block = function Block() {
+    this.x = Math.floor(Math.random() * 10);
+    this.y = Math.floor(Math.random() * 10);
+};
+
 var Game = function Game() {
     var _this = this;
 
     this.board = document.querySelectorAll('section#board div');
     this.furry = new Furry();
     this.coin = new Coin();
+    this.block = new Block();
     this.score = 0;
     this.index = function (x, y) {
         return x + y * 10;
@@ -105,6 +111,10 @@ var Game = function Game() {
         _this.board[_this.index(_this.coin.x, _this.coin.y)].classList.add('coin');
     };
 
+    this.showBlock = function () {
+        _this.board[_this.index(_this.block.x, _this.block.y)].classList.add('block');
+    };
+
     this.furryMove = function () {
         if (_this.furry.direction === 'right') {
             _this.furry.x += 1;
@@ -116,6 +126,7 @@ var Game = function Game() {
             _this.furry.y += 1;
         }
         _this.gameOver();
+        _this.checkBlockCollision();
         _this.checkCoinCollision();
         _this.showFurry();
     };
@@ -146,6 +157,17 @@ var Game = function Game() {
             _this.showCoin();
         }
     };
+    this.checkBlockCollision = function () {
+        if (_this.furry.x === _this.block.x && _this.furry.y === _this.block.y) {
+            document.getElementById('gOver').play();
+            _this.furry.x = 1;
+            _this.furry.y = 1;
+            _this.board[_this.index(_this.furry.x, _this.furry.y)].classList.add('invisible');
+            clearInterval(_this.idSetInterval);
+            document.getElementById("over").classList.remove("invisible");
+            document.querySelector("#over strong").innerText = _this.score.toString();
+        }
+    };
     this.gameOver = function () {
         if (_this.furry.x < 0 || _this.furry.x > 9 || _this.furry.y < 0 || _this.furry.y > 9) {
             document.getElementById('gOver').play();
@@ -165,6 +187,7 @@ var Game = function Game() {
 };
 
 var play = new Game();
+play.showBlock();
 play.showCoin();
 play.startGame();
 document.addEventListener("keydown", function (event) {

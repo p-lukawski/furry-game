@@ -10,10 +10,16 @@ let Coin = function () {
     this.y = Math.floor(Math.random() * 10);
 };
 
+let Block = function () {
+    this.x = Math.floor(Math.random() * 10);
+    this.y = Math.floor(Math.random() * 10);
+};
+
 let Game = function () {
     this.board = document.querySelectorAll('section#board div');
     this.furry = new Furry();
     this.coin = new Coin();
+    this.block = new Block();
     this.score = 0;
     this.index = (x,y) => {
         return x + (y * 10);
@@ -32,6 +38,10 @@ let Game = function () {
         this.board[ this.index(this.coin.x, this.coin.y) ].classList.add('coin');
     };
 
+    this.showBlock = () => {
+        this.board[ this.index(this.block.x, this.block.y) ].classList.add('block');
+    };
+
     this.furryMove = () => {
         if(this.furry.direction === 'right'){
             this.furry.x += 1;
@@ -43,6 +53,7 @@ let Game = function () {
             this.furry.y +=1;
         }
         this.gameOver();
+        this.checkBlockCollision();
         this.checkCoinCollision();
         this.showFurry();
     };
@@ -73,6 +84,17 @@ let Game = function () {
             this.showCoin();
         }
     };
+    this.checkBlockCollision = () => {
+        if(this.furry.x === this.block.x && this.furry.y === this.block.y){
+            document.getElementById('gOver').play();
+            this.furry.x = 1;
+            this.furry.y = 1;
+            this.board[this.index(this.furry.x,this.furry.y)].classList.add('invisible');
+            clearInterval(this.idSetInterval);
+            document.getElementById("over").classList.remove("invisible");
+            document.querySelector("#over strong").innerText = (this.score).toString();
+        }
+    }
     this.gameOver = () => {
       if(this.furry.x < 0 || this.furry.x > 9 || this.furry.y < 0 || this.furry.y > 9){
           document.getElementById('gOver').play();
@@ -95,6 +117,7 @@ let Game = function () {
 };
 
 let play = new Game();
+play.showBlock();
 play.showCoin();
 play.startGame();
 document.addEventListener("keydown", (event) => {

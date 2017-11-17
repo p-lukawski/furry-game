@@ -51,6 +51,10 @@ section#score div {
   background-size: cover;
 }
 
+.block {
+  background-color: black;
+}
+
 section#over {
   position: fixed;
   width: 100%;
