@@ -137,6 +137,7 @@ var Game = function Game() {
     };
     this.checkCoinCollision = function () {
         if (_this.furry.x === _this.coin.x && _this.furry.y === _this.coin.y) {
+            document.getElementById('pTaken').play();
             _this.board[_this.index(_this.coin.x, _this.coin.y)].classList.remove('coin');
             _this.score += 1;
             var scoreEl = document.querySelector('#score strong');
@@ -145,11 +146,13 @@ var Game = function Game() {
             _this.showCoin();
         }
     };
-
     this.gameOver = function () {
         if (_this.furry.x < 0 || _this.furry.x > 9 || _this.furry.y < 0 || _this.furry.y > 9) {
+            document.getElementById('gOver').play();
+            _this.furry.x = 1;
+            _this.furry.y = 1;
+            _this.board[_this.index(_this.furry.x, _this.furry.y)].classList.add('invisible');
             clearInterval(_this.idSetInterval);
-            _this.hideFurry();
             document.getElementById("over").classList.remove("invisible");
             document.querySelector("#over strong").innerText = _this.score.toString();
         }

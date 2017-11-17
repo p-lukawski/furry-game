@@ -64,6 +64,7 @@ let Game = function () {
     };
     this.checkCoinCollision = () => {
         if(this.furry.x === this.coin.x && this.furry.y === this.coin.y){
+            document.getElementById('pTaken').play();
             this.board[this.index(this.coin.x,this.coin.y)].classList.remove('coin');
             this.score += 1;
             let scoreEl = document.querySelector('#score strong');
@@ -72,11 +73,13 @@ let Game = function () {
             this.showCoin();
         }
     };
-
     this.gameOver = () => {
       if(this.furry.x < 0 || this.furry.x > 9 || this.furry.y < 0 || this.furry.y > 9){
+          document.getElementById('gOver').play();
+          this.furry.x = 1;
+          this.furry.y = 1;
+          this.board[this.index(this.furry.x,this.furry.y)].classList.add('invisible');
           clearInterval(this.idSetInterval);
-          this.hideFurry();
           document.getElementById("over").classList.remove("invisible");
           document.querySelector("#over strong").innerText = (this.score).toString();
       }
